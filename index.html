@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e0720">
+<title>Avalanche Courier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{--night:#0e0720;--plum:#1b0e36;--purple:#5c1abf;--bright:#7a33ea;--cream:#faf7f0;--ink:#1a0a38;--lilac:#bfa3f2;--mist:#b3a8c8;--line:rgba(250,247,240,.14);--bad:#ff9aa8}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;background:radial-gradient(circle at 85% -10%,rgba(92,26,191,.5),transparent 45%),var(--night);color:var(--cream);min-height:100vh;line-height:1.45}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+:focus-visible{outline:2px solid var(--lilac);outline-offset:2px}
+.mut{color:var(--mist)}
+.card{background:var(--plum);border:1px solid var(--line);border-radius:24px;padding:22px}
+.brand{display:flex;align-items:center;gap:12px}
+.tile{width:42px;height:42px;border-radius:12px;background:var(--purple);display:grid;place-items:center;flex:none}
+.tile svg{width:26px;height:auto;color:var(--cream)}
+.brand b{display:block;font-size:18px;letter-spacing:-.02em;line-height:1.1}
+.brand small{display:block;font-size:13px;color:var(--lilac);font-weight:500}
+.btn{border:1px solid transparent;border-radius:999px;padding:11px 20px;font-weight:700;font-size:14px;background:transparent;transition:background .2s,transform .2s}
+.btn:disabled{opacity:.5;cursor:wait}
+.btn-primary{background:var(--cream);color:var(--ink)}
+.btn-primary:hover:not(:disabled){background:#fff}
+.btn-ghost{border-color:rgba(250,247,240,.3)}
+.btn-ghost:hover{background:rgba(250,247,240,.08)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(250,247,240,.25);background:rgba(250,247,240,.04);outline:none}
+.input:focus{border-color:var(--lilac)}
+select.input option{background:var(--plum)}
+label.f{display:block;font-size:13px;color:var(--mist);margin-bottom:6px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:820px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.g2{grid-template-columns:1fr}}
+.err{color:var(--bad);font-size:14px;margin:14px 0 0}
+
+/* login */
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.lcard{width:100%;max-width:420px;padding:34px 28px}
+.lcard h1{font-size:30px;letter-spacing:-.03em;margin:26px 0 6px}
+.chk{display:flex;gap:10px;align-items:center;margin:18px 0 0;font-size:14px;color:var(--mist)}
+.chk input{width:18px;height:18px;accent-color:var(--bright)}
+#gbtn{margin-top:22px;min-height:44px}
+
+/* app shell */
+header{position:sticky;top:0;z-index:20;background:rgba(14,7,32,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.who{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:14px}
+.who span{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+nav{max-width:1200px;margin:0 auto;padding:0 20px 12px;display:flex;gap:8px;overflow-x:auto}
+nav button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:8px 16px;font-size:14px;font-weight:600;color:var(--mist);white-space:nowrap}
+nav button.on{background:var(--cream);color:var(--ink);border-color:var(--cream)}
+main{max-width:1200px;margin:0 auto;padding:26px 20px 70px}
+h2{font-size:clamp(26px,4vw,40px);letter-spacing:-.03em;margin:0 0 4px;line-height:1.1}
+h3{font-size:19px;margin:0 0 14px;letter-spacing:-.01em}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.kpi{padding:20px}
+.kpi p{margin:0 0 8px;font-size:14px;color:var(--mist)}
+.kpi strong{font-size:clamp(24px,3vw,34px);letter-spacing:-.03em;display:block;overflow:hidden;text-overflow:ellipsis}
+.kpi.hot{background:var(--purple);border-color:transparent}
+.kpi.hot p{color:var(--lilac)}
+.wrap{overflow-x:auto;border-radius:18px;border:1px solid var(--line);background:var(--plum)}
+table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap}
+th{text-align:left;font-weight:600;color:var(--lilac);padding:13px 16px;border-bottom:1px solid var(--line);font-size:13px}
+td{padding:13px 16px;border-bottom:1px solid rgba(250,247,240,.06)}
+tr:last-child td{border-bottom:0}
+td small{display:block;color:var(--mist)}
+.r{text-align:right}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;background:rgba(191,163,242,.16);font-size:12px;color:var(--lilac)}
+.empty{padding:34px 20px;text-align:center;color:var(--mist)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filters .input{flex:1;min-width:150px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 14px;font-size:14px}
+.chip button{border:0;background:rgba(250,247,240,.1);border-radius:50%;width:22px;height:22px;line-height:1;padding:0}
+.row{display:flex;gap:10px;align-items:flex-end}
+.row>div{flex:1}
+.acts{display:flex;gap:6px;justify-content:flex-end}
+.load{position:fixed;inset:0;background:rgba(14,7,32,.7);display:grid;place-items:center;z-index:50}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--lilac);animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:var(--cream);color:var(--ink);padding:12px 20px;border-radius:999px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.bad{background:var(--bad)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="mark" viewBox="0 0 581 290"><path fill="currentColor" d="M7 222L11 240 16 252 23 266 35 282 36 283 158 212 158 215 159 222 161 232 166 248 175 266 187 282 188 283 304 216 305 216 306 227 308 236 314 252 321 265 333 282 335 283 570 146 574 142 574 138 572 136 542 119 348 6 346 8 345 15 345 34 347 45 351 56 358 68 371 80 384 88 396 94 420 102 437 104 456 106 488 108 484 110 427 137 200 6 199 12 198 30 200 42 202 49 206 58 211 66 220 76 229 84 236 88 250 94 266 100 279 102 310 106 342 108 332 113 276 140 274 136 48 6 47 12 46 30 48 42 50 50 54 58 61 69 68 76 77 84 84 88 98 94 114 100 127 102 158 106 190 108 180 113 6 196 6 206Z"/></symbol></svg>
+
+<!-- Sign in -->
+<div id="login">
+  <div class="card lcard">
+    <div class="brand"><span class="tile"><svg viewBox="0 0 581 290"><use href="#mark"/></svg></span><b>Avalanche<small>Courier</small></b></div>
+    <h1>Sign in</h1>
+    <p class="mut" style="margin:0">Use the Google account your administrator added.</p>
+    <div id="gbtn"></div>
+    <label class="chk"><input type="checkbox" id="stay"> Stay signed in on this device</label>
+    <p id="lerr" class="err hidden"></p>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <header>
+    <div class="bar">
+      <div class="brand"><span class="tile"><svg viewBox="0 0 581 290"><use href="#mark"/></svg></span><b>Avalanche Courier<small id="sub"></small></b></div>
+      <div class="who"><span id="who" class="mut"></span><button class="btn btn-ghost btn-sm" id="out">Sign out</button></div>
+    </div>
+    <nav id="nav">
+      <button data-tab="overview">Overview</button>
+      <button data-tab="orders">Orders</button>
+      <button data-tab="record" data-admin>Record order</button>
+      <button data-tab="team" data-admin>Team</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="t-overview" data-t>
+      <div class="head"><div><h2>Overview</h2><p class="mut" style="margin:0" id="ovsub"></p></div><button class="btn btn-ghost btn-sm" id="refresh">Refresh</button></div>
+      <div class="grid g4" style="margin-bottom:26px">
+        <div class="card kpi hot"><p>Total earnings</p><strong id="k-earn">₦0</strong></div>
+        <div class="card kpi"><p>Orders</p><strong id="k-ord">0</strong></div>
+        <div class="card kpi"><p>Customers</p><strong id="k-cus">0</strong></div>
+        <div class="card kpi"><p>Top driver</p><strong id="k-drv">None yet</strong></div>
+      </div>
+      <h3>Latest orders</h3>
+      <div class="wrap"><table><thead><tr><th>Order</th><th>Date</th><th>Customer</th><th>Driver</th><th class="r">Price</th></tr></thead><tbody id="recent"></tbody></table></div>
+    </section>
+
+    <section id="t-orders" data-t class="hidden">
+      <div class="head"><div><h2>Orders</h2><p class="mut" style="margin:0">Search by order number, name or phone.</p></div></div>
+      <div class="filters">
+        <input class="input" id="q" placeholder="Search orders" style="flex:2">
+        <select class="input" id="fd"><option value="">All drivers</option></select>
+        <select class="input" id="fo" data-admin><option value="">All fleets</option></select>
+      </div>
+      <div class="wrap"><table><thead><tr><th>Order</th><th>Date</th><th>Customer</th><th>Phone</th><th>Driver and vehicle</th><th data-admin>Fleet</th><th>Service</th><th class="r">Price</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </section>
+
+    <section id="t-record" data-t class="hidden">
+      <div class="head"><div><h2>Record order</h2><p class="mut" style="margin:0">Add a completed order to the sheet.</p></div></div>
+      <form class="card" id="oform" style="max-width:640px">
+        <div class="grid g2">
+          <div><label class="f" for="o-name">Customer name</label><input class="input" id="o-name" required></div>
+          <div><label class="f" for="o-wa">WhatsApp number</label><input class="input" id="o-wa" type="tel" placeholder="2348000000000" required></div>
+          <div><label class="f" for="o-drv">Driver</label><input class="input" id="o-drv" required></div>
+          <div><label class="f" for="o-veh">Vehicle</label><input class="input" id="o-veh" placeholder="Van, KJA123" required></div>
+          <div><label class="f" for="o-own">Fleet</label><select class="input" id="o-own" required></select></div>
+          <div><label class="f" for="o-type">Service</label><select class="input" id="o-type"><option>Last mile delivery</option><option>Intracity delivery</option><option>Courier service</option></select></div>
+          <div style="grid-column:1/-1"><label class="f" for="o-price">Price (₦)</label><input class="input" id="o-price" type="number" min="0" required></div>
+        </div>
+        <p id="o-hint" class="err hidden">Add a fleet on the Team tab before recording orders.</p>
+        <button class="btn btn-primary" style="margin-top:20px" id="o-btn">Save order</button>
+      </form>
+    </section>
+
+    <section id="t-team" data-t class="hidden">
+      <div class="head"><div><h2>Team</h2><p class="mut" style="margin:0">Only people on this list can sign in.</p></div></div>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:start;margin-bottom:26px">
+        <div class="card">
+          <h3>Fleets</h3>
+          <div class="row"><div><label class="f" for="fl-new">New fleet name</label><input class="input" id="fl-new"></div><button class="btn btn-primary" id="fl-add">Add fleet</button></div>
+          <div class="chips" id="chips"></div>
+        </div>
+        <form class="card" id="uform">
+          <h3 id="u-title">Add a person</h3>
+          <div class="grid g2">
+            <div><label class="f" for="u-name">Name</label><input class="input" id="u-name" required></div>
+            <div><label class="f" for="u-email">Google email</label><input class="input" id="u-email" type="email" required></div>
+            <div><label class="f" for="u-role">Role</label><select class="input" id="u-role"><option value="owner">Fleet owner</option><option value="admin">Admin</option></select></div>
+            <div id="u-fw"><label class="f" for="u-fleet">Fleet</label><select class="input" id="u-fleet"></select></div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:18px"><button class="btn btn-primary" id="u-save">Save person</button><button type="button" class="btn btn-ghost hidden" id="u-cancel">Cancel</button></div>
+        </form>
+      </div>
+      <h3>People with access</h3>
+      <div class="wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Fleet</th><th></th></tr></thead><tbody id="people"></tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<div class="load hidden" id="load"><div class="spin"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVn9rrOC_2dV2kJO-PV37-Vn1fmgH-KoQWsV6vH2HHiPOH0ZzCNsUZ_fk21yMl4Vmk/exec';
+const CLIENT_ID = '652355191658-snoh8k874s6epm0d2t370jue6g20l082.apps.googleusercontent.com';
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const naira = n => '₦' + Number(n || 0).toLocaleString();
+const day = t => new Date(t).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'2-digit'});
+const S = {token:null, user:null, orders:[], fleets:[], users:[]};
+const isAdmin = () => S.user && S.user.role === 'admin';
+
+const store = {
+  get(){ try { return localStorage.getItem('av_t') || sessionStorage.getItem('av_t'); } catch(e){ return null; } },
+  set(t, stay){ try { (stay ? localStorage : sessionStorage).setItem('av_t', t); } catch(e){} },
+  clear(){ try { localStorage.removeItem('av_t'); sessionStorage.removeItem('av_t'); } catch(e){} }
+};
+
+function toast(msg, bad){ const t = $('toast'); t.textContent = msg; t.className = 'toast show' + (bad ? ' bad' : ''); clearTimeout(toast.h); toast.h = setTimeout(() => t.className = 'toast', 3500); }
+const busy = on => $('load').classList.toggle('hidden', !on);
+
+async function api(action, data){
+  const res = await fetch(SCRIPT_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(Object.assign({action, token:S.token}, data))});
+  const j = await res.json();
+  if (j.error === 'session') { signOut(j.message); throw new Error(j.message); }
+  if (j.error) throw new Error(j.message || 'Something went wrong. Please try again.');
+  return j;
+}
+
+async function load(){
+  const j = await api('bootstrap');
+  S.user = j.user; S.fleets = j.fleets; S.orders = j.orders; S.users = j.users || [];
+  render();
+}
+
+function showApp(){ $('login').classList.add('hidden'); $('app').classList.remove('hidden'); tab('overview'); }
+
+function signOut(msg){
+  store.clear(); S.token = null; S.user = null; S.orders = []; S.users = [];
+  $('app').classList.add('hidden'); $('login').classList.remove('hidden');
+  lerr(msg || '');
+}
+function lerr(m){ const e = $('lerr'); e.textContent = m || ''; e.classList.toggle('hidden', !m); }
+
+/* ---------- Google sign-in ---------- */
+function initGoogle(){
+  if (CLIENT_ID.indexOf('PASTE_') === 0) { lerr('Setup needed: add your Google Client ID to this file.'); return; }
+  if (!window.google || !google.accounts) { setTimeout(initGoogle, 250); return; }
+  google.accounts.id.initialize({client_id: CLIENT_ID, callback: onCred});
+  google.accounts.id.renderButton($('gbtn'), {theme:'filled_black', shape:'pill', size:'large', text:'signin_with', width:300});
+}
+async function onCred(r){
+  lerr(''); busy(true);
+  try {
+    const stay = $('stay').checked;
+    const j = await api('login', {idToken:r.credential, stay});
+    S.token = j.token; store.set(j.token, stay);
+    await load(); showApp();
+  } catch(e) { if (!S.user) lerr(e.message); }
+  busy(false);
+}
+
+/* ---------- Rendering ---------- */
+function tab(name){
+  if (!isAdmin() && (name === 'record' || name === 'team')) name = 'overview';
+  document.querySelectorAll('[data-t]').forEach(s => s.classList.toggle('hidden', s.id !== 't-' + name));
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === name));
+}
+
+function opts(list, first){ return (first ? '<option value="">' + first + '</option>' : '') + list.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join(''); }
+
+function render(){
+  const a = isAdmin();
+  document.querySelectorAll('[data-admin]').forEach(el => el.classList.toggle('hidden', !a));
+  $('sub').textContent = a ? 'Administration Console' : 'Fleet Management Console';
+  document.title = 'Avalanche Courier ' + (a ? 'Administration Console' : 'Fleet Management Console');
+  $('who').textContent = S.user.name;
+  $('ovsub').textContent = a ? 'All fleets' : S.user.fleet;
+
+  const keepD = $('fd').value, keepO = $('fo').value;
+  $('fd').innerHTML = opts([...new Set(S.orders.map(o => o.Driver).filter(Boolean))].sort(), 'All drivers');
+  $('fo').innerHTML = opts(S.fleets, 'All fleets');
+  $('fd').value = keepD; $('fo').value = keepO;
+  $('o-own').innerHTML = opts(S.fleets);
+  $('u-fleet').innerHTML = opts(S.fleets);
+  $('o-hint').classList.toggle('hidden', !a || S.fleets.length > 0);
+  filter();
+  if (a) renderTeam();
+}
+
+function kpis(list){
+  const by = {}; let sum = 0;
+  list.forEach(o => { const p = Number(o.Price) || 0; sum += p; if (o.Driver) by[o.Driver] = (by[o.Driver] || 0) + p; });
+  const top = Object.keys(by).sort((x, y) => by[y] - by[x])[0];
+  $('k-earn').textContent = naira(sum);
+  $('k-ord').textContent = list.length;
+  $('k-cus').textContent = new Set(list.map(o => o['Customer ID (Hash)']).filter(Boolean)).size;
+  $('k-drv').textContent = top || 'None yet';
+}
+
+function filter(){
+  const q = $('q').value.trim().toLowerCase(), d = $('fd').value, f = $('fo').value;
+  const list = S.orders.filter(o => (!d || o.Driver === d) && (!f || o['Vehicle Owner'] === f) &&
+    (!q || (o['Order ID'] + ' ' + o['Customer Name'] + ' ' + o['WhatsApp Number']).toLowerCase().includes(q)))
+    .sort((x, y) => new Date(y.Timestamp) - new Date(x.Timestamp));
+  const a = isAdmin();
+  kpis(S.orders);
+  const none = cols => '<tr><td colspan="' + cols + '" class="empty">No orders yet. They will appear here as soon as they are recorded.</td></tr>';
+  $('recent').innerHTML = S.orders.length ? [...S.orders].sort((x, y) => new Date(y.Timestamp) - new Date(x.Timestamp)).slice(0, 5).map(o =>
+    '<tr><td><span class="pill">' + esc(o['Order ID']) + '</span></td><td>' + day(o.Timestamp) + '</td><td>' + esc(o['Customer Name']) + '</td><td>' + esc(o.Driver) + '</td><td class="r">' + naira(o.Price) + '</td></tr>').join('') : none(5);
+  $('rows').innerHTML = list.length ? list.map(o =>
+    '<tr><td><span class="pill">' + esc(o['Order ID']) + '</span></td><td>' + day(o.Timestamp) + '</td><td>' + esc(o['Customer Name']) + '<small>ID ' + esc(o['Customer ID (Hash)']) + '</small></td><td>' + esc(o['WhatsApp Number']) +
+    '</td><td>' + esc(o.Driver) + '<small>' + esc(o.Vehicle) + '</small></td>' + (a ? '<td>' + esc(o['Vehicle Owner']) + '</td>' : '') + '<td>' + esc(o['Order Type']) + '</td><td class="r">' + naira(o.Price) + '</td></tr>').join('')
+    : '<tr><td colspan="8" class="empty">' + (S.orders.length ? 'No orders match your search.' : 'No orders yet. They will appear here as soon as they are recorded.') + '</td></tr>';
+}
+
+function renderTeam(){
+  $('chips').innerHTML = S.fleets.length ? S.fleets.map(f => '<span class="chip">' + esc(f) + '<button data-df="' + esc(f) + '" aria-label="Delete ' + esc(f) + '">×</button></span>').join('') : '<span class="mut">No fleets yet. Add your first one above.</span>';
+  $('people').innerHTML = S.users.map(u =>
+    '<tr><td>' + esc(u.name) + '</td><td>' + esc(u.email) + '</td><td>' + (u.role === 'admin' ? 'Admin' : 'Fleet owner') + '</td><td>' + esc(u.fleet || '-') +
+    '</td><td><div class="acts"><button class="btn btn-ghost btn-sm" data-eu="' + esc(u.email) + '">Edit</button><button class="btn btn-ghost btn-sm" data-du="' + esc(u.email) + '">Remove</button></div></td></tr>').join('');
+  roleToggle();
+}
+function roleToggle(){ $('u-fw').classList.toggle('hidden', $('u-role').value === 'admin'); }
+function resetUser(){ $('uform').reset(); $('u-email').readOnly = false; $('u-title').textContent = 'Add a person'; $('u-cancel').classList.add('hidden'); roleToggle(); }
+
+/* ---------- Actions ---------- */
+async function act(fn, ok){
+  busy(true);
+  try { await fn(); await load(); if (ok) toast(ok); }
+  catch(e) { if (e.message !== 'Your session has ended. Please sign in again.') toast(e.message, true); }
+  busy(false);
+}
+
+$('nav').onclick = e => { if (e.target.dataset.tab) tab(e.target.dataset.tab); };
+$('refresh').onclick = () => act(() => Promise.resolve(), 'Up to date');
+$('out').onclick = async () => { try { await api('logout'); } catch(e){} signOut(''); };
+['q','fd','fo'].forEach(id => $(id).addEventListener('input', filter));
+$('u-role').onchange = roleToggle;
+
+$('oform').onsubmit = e => {
+  e.preventDefault();
+  act(async () => {
+    await api('addOrder', {name:$('o-name').value, whatsapp:$('o-wa').value, driver:$('o-drv').value, vehicle:$('o-veh').value, owner:$('o-own').value, type:$('o-type').value, price:$('o-price').value});
+    $('oform').reset(); tab('overview');
+  }, 'Order saved');
+};
+
+$('fl-add').onclick = () => { const n = $('fl-new').value; act(async () => { await api('saveFleet', {name:n}); $('fl-new').value = ''; }, 'Fleet added'); };
+$('chips').onclick = e => { const f = e.target.dataset.df; if (f && confirm('Delete the fleet "' + f + '"?')) act(() => api('deleteFleet', {name:f}), 'Fleet deleted'); };
+
+$('uform').onsubmit = e => {
+  e.preventDefault();
+  act(async () => {
+    await api('saveUser', {name:$('u-name').value, email:$('u-email').value, role:$('u-role').value, fleet:$('u-fleet').value});
+    resetUser();
+  }, 'Person saved');
+};
+$('u-cancel').onclick = resetUser;
+$('people').onclick = e => {
+  const em = e.target.dataset.eu, del = e.target.dataset.du;
+  if (em) {
+    const u = S.users.find(x => x.email === em);
+    $('u-name').value = u.name; $('u-email').value = u.email; $('u-email').readOnly = true;
+    $('u-role').value = u.role; $('u-fleet').value = u.fleet; roleToggle();
+    $('u-title').textContent = 'Edit person'; $('u-cancel').classList.remove('hidden'); $('u-name').focus();
+  }
+  if (del && confirm('Remove ' + del + '? They will lose access straight away.')) act(() => api('deleteUser', {email:del}), 'Person removed');
+};
+
+/* ---------- Start ---------- */
+window.addEventListener('load', async () => {
+  initGoogle();
+  S.token = store.get();
+  if (!S.token) return;
+  busy(true);
+  try { await load(); showApp(); }
+  catch(e) { if (S.token) signOut('We could not load your account. Please sign in again.'); }
+  busy(false);
+});
+</script>
+</body>
+</html>
